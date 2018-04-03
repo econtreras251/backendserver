@@ -13,6 +13,8 @@ const appRoutes = require('./routes/app')
 const usuarioRoutes = require('./routes/usuario')
 const loginRoutes = require('./routes/login')
 const ticketsRoutes = require('./routes/ticket')
+const hositalRoutes = require('./routes/hospital')
+const medicoRoutes = require('./routes/medico')
 
 // Conexion a la base de datos
 mongoose.connection.openUri('mongodb://localhost:27017/hospitalDB',( err, res )=>{
@@ -24,6 +26,8 @@ mongoose.connection.openUri('mongodb://localhost:27017/hospitalDB',( err, res )=
 
 // Middleware
 app.use('/usuario', usuarioRoutes)
+app.use('/hospital', hositalRoutes)
+app.use('/medico', medicoRoutes)
 app.use('/tickets', ticketsRoutes)
 app.use('/login', loginRoutes)
 app.use('/', appRoutes)
