@@ -1,6 +1,10 @@
 const express = require('express')
 const fileUpload = require('express-fileupload');
 const app = express()
+const Usuario = require('../models/usuario')
+const Medico = require('../models/medico')
+const Hospital = require('../models/hospital')
+const fs = require('fs')
 
 app.use(fileUpload());
 
@@ -57,6 +61,7 @@ app.put('/:tipo/:id', (req, res, next)=>{
     const PATH = `./uploads/${tipo}/${nombreArchivo}`
 
     archivo.mv(PATH,(err)=>{
+
         if (err) {
             return res.status(500).json({
                 ok: false,
@@ -64,14 +69,67 @@ app.put('/:tipo/:id', (req, res, next)=>{
                 errors: err
             })
         }
+
     })
 
 
-    res.status(200).json({
+    subirPorTipo( tipo, id, nombreArchivo, res )
+
+    /*res.status(200).json({
         ok: true,
          mensaje: 'Archivo Movido'
-     })
+     })*/
 
 })
+
+function subirPorTipo( tipo, id, nombreArchivo, res ) {
+    
+    if ( tipo === 'usuarios' ) {
+
+        Usuario.findById( id, (err, usuario)=>{
+
+            let pathViejo = './uploads/usuarios'+usuario.img
+
+            //Si existe elimina la imagen anterior
+            if ( fs.existsSync(pathViejo) ) {
+                fs.unlink( pathViejo )
+            }
+
+            usuario.img = nombreArchivo
+
+            usuario.save( (err, usuarioActualizado) =>{
+
+                if (err) {
+                    return res.status(500).json({
+                        ok: false,
+                        mensaje: 'Error al actualizar Usuario',
+                        errors: err
+                    })
+                }
+
+                return res.status(200).json({
+                    ok:true,
+                    mensaje:'Imagen de usuario actualizada',
+                    usuario: usuarioActualizado
+                })
+
+
+            })
+
+        })
+
+    }
+
+    if ( tipo === 'medicos' ) {
+        
+    }
+
+    if ( tipo === 'hospitales' ) {
+        
+    }
+
+}
+
+
 
 module.exports = app

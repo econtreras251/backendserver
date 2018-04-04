@@ -71,11 +71,6 @@ app.get('/coleccion/:tabla/:busqueda', (req, res)=>{
 
 
 
-
-
-
-
-
 function buscarHospitales( busqueda, regex ) {
 
     return new Promise( (resolve, reject) =>{
