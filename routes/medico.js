@@ -9,7 +9,7 @@ const mdAuth = require('../middlewares/autenticacion')
 //Obtener todos los medicos
 app.get('/', (req, res, next)=>{
 
-    Medico.find({ }, 'nombre img usuario')
+    Medico.find()
           .exec(
           ( err, medicos )=>{
 
@@ -55,8 +55,9 @@ app.put('/:id', mdAuth.verificaToken, ( req, res, next )=>{
       })
     }
 
-    medico.nombre = body.nombre,
-    medico.img = body.img
+    medico.nombre = body.nombre
+    medico.usuario = req.usuario._id
+    medico.hospital = body.hospital
 
     medico.save( ( err, medicoGuardado )=>{
 
@@ -88,7 +89,6 @@ app.post('/', mdAuth.verificaToken ,( req, res, next )=>{
   let medico = new Medico({
     nombre: body.nombre,
     usuario: req.usuario,
-    img: body.img,
     hospital: body.hospital
   })
 
@@ -104,9 +104,7 @@ app.post('/', mdAuth.verificaToken ,( req, res, next )=>{
 
     res.status(201).json({
       ok: true,
-      medico: medicoGuardado,
-      usuarioRegistro: req.usuario,
-      hospital: body.hospital
+      medico: medicoGuardado
     })
 
   })
