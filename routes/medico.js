@@ -9,7 +9,15 @@ const mdAuth = require('../middlewares/autenticacion')
 //Obtener todos los medicos
 app.get('/', (req, res, next)=>{
 
+  var desde = req.query.desde || 0;
+
+  desde = Number(desde)
+
     Medico.find()
+          .populate('usuario', 'nombre email')
+          .populate('hospital')
+          .skip(desde)
+          .limit(5)
           .exec(
           ( err, medicos )=>{
 
@@ -21,9 +29,14 @@ app.get('/', (req, res, next)=>{
         })
     }
 
-    res.status(200).json({
-      ok: true,
-      medicos: medicos
+    Medico.count({}, (err, conteo)=>{
+
+      res.status(200).json({
+        ok: true,
+        medicos: medicos,
+        total: conteo
+      })
+
     })
 
   })
