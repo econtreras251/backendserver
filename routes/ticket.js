@@ -2,6 +2,7 @@ const express = require('express')
 const app = express()
 const jwt = require('jsonwebtoken')
 const Ticket = require('../models/ticket')
+const Usuario = require('../models/usuario')
 const mdAuth = require('../middlewares/autenticacion')
 
 // Obtener todos los tickets
@@ -31,6 +32,9 @@ app.get('/', (req, res, next)=>{
 // Crear nuevo ticket
 app.post('/', mdAuth.verificaToken ,( req, res, next )=>{
 
+  Usuario.findOne({ role: 'SUPPORT_ROLE' Y estado: false })//Buscar usuario que cumpla condicional, y luego utilizar metodos para insertar tickests en el arreglo como en el ejemplod e fazt
+
+
   let body = req.body
   let user = req.query.id
 
@@ -38,7 +42,7 @@ app.post('/', mdAuth.verificaToken ,( req, res, next )=>{
     titulo: body.titulo,
     descripcion: body.descripcion,
     user_send: req.usuario,
-    support_asigned: req.query.id
+    support_asigned: 
   })
 
   ticket.save( ( err, ticketGuardado )=>{
@@ -55,7 +59,7 @@ app.post('/', mdAuth.verificaToken ,( req, res, next )=>{
       ok: true,
       ticket: ticketGuardado,
       usuario_peticion: req.usuario,
-      soporte_asignado: req.query.id
+      soporte_asignado: 
     })
 
   })
